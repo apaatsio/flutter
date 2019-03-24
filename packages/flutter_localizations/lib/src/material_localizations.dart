@@ -23,7 +23,7 @@ import 'widgets_localizations.dart';
 ///
 /// {@macro flutter.localizations.languages}
 ///
-/// This list is available programatically via [kSupportedLanguages].
+/// This list is available programmatically via [kSupportedLanguages].
 ///
 /// ## Sample code
 ///

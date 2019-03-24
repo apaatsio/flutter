@@ -71,7 +71,7 @@ enum ScriptCategory {
 ///
 /// ```dart
 /// Typography(
-///   platorm: platform,
+///   platform: platform,
 ///   englishLike: Typography.englishLike2018,
 ///   dense: Typography.dense2018,
 ///   tall: Typography.tall2018,

@@ -38,7 +38,7 @@ class KernelCompilerFactory {
 
 typedef CompilerMessageConsumer = void Function(String message, { bool emphasis, TerminalColor color });
 
-/// The target model describes the set of core libraries that are availible within
+/// The target model describes the set of core libraries that are available within
 /// the SDK.
 class TargetModel {
   /// Parse a [TargetModel] from a raw string.
