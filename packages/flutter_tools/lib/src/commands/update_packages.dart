@@ -723,21 +723,18 @@ class PubspecYaml {
     endOfDirectDependencies ??= output.length;
     endOfDevDependencies ??= output.length;
 
-    // Now include all the transitive dependencies and transitive dev dependencies.
-    // The blocks of text to insert for each dependency section.
-    final List<String> transitiveDependencyOutput = <String>[];
-    final List<String> transitiveDevDependencyOutput = <String>[];
-
-    // Which dependencies we need to handle for the transitive and dev dependency sections.
-    final Set<String> transitiveDependencies = <String>{};
-    final Set<String> transitiveDevDependencies = <String>{};
-
     // Merge the lists of dependencies we've seen in this file from dependencies, dev dependencies,
     // and the dependencies we know this file mentions that are already pinned
     // (and which didn't get special processing above).
-    final Set<String> implied = Set<String>.from(directDependencies)
-      ..addAll(specialDependencies)
-      ..addAll(devDependencies);
+    final Set<String> implied = <String>{
+      ...directDependencies,
+      ...specialDependencies,
+      ...devDependencies
+    };
+
+    // Now include all the transitive dependencies and transitive dev dependencies.
+    final Set<String> transitiveDependencies = <String>{};
+    final Set<String> transitiveDevDependencies = <String>{};
 
     // Create a new set to hold the list of packages we've already processed, so
     // that we don't redundantly process them multiple times.
@@ -748,30 +745,33 @@ class PubspecYaml {
       transitiveDevDependencies.addAll(versions.getTransitiveDependenciesFor(package, seen: done, exclude: implied));
 
     // Sort each dependency block lexically so that we don't get noisy diffs when upgrading.
-    final List<String> transitiveDependenciesAsList = transitiveDependencies.toList()..sort();
-    final List<String> transitiveDevDependenciesAsList = transitiveDevDependencies.toList()..sort();
+    final List<String> transitiveDependenciesAsSortedList = transitiveDependencies.toList()..sort();
+    final List<String> transitiveDevDependenciesAsSortedList = transitiveDevDependencies.toList()..sort();
 
+    // The blocks of text to insert for each dependency section.
     // Add a line for each transitive dependency and transitive dev dependency using our magic string to recognize them later.
-    for (String package in transitiveDependenciesAsList)
-      transitiveDependencyOutput.add('  $package: ${versions.versionFor(package)} $kTransitiveMagicString');
-    for (String package in transitiveDevDependenciesAsList)
-      transitiveDevDependencyOutput.add('  $package: ${versions.versionFor(package)} $kTransitiveMagicString');
+    // Add a blank line before and after each section to keep the resulting output clean.
+    final List<String> transitiveDependencyOutput = <String>[
+      '',
+      for (String package in transitiveDependenciesAsSortedList)
+        '  $package: ${versions.versionFor(package)} $kTransitiveMagicString',
+      '',
+    ];
+    final List<String> transitiveDevDependencyOutput = <String>[
+      '',
+      for (String package in transitiveDevDependenciesAsSortedList)
+        '  $package: ${versions.versionFor(package)} $kTransitiveMagicString',
+      ''
+    ];
 
     // Build a sorted list of all dependencies for the checksum.
-    final Set<String> checksumDependencies = <String>{}
-      ..addAll(directDependencies)
-      ..addAll(devDependencies)
-      ..addAll(transitiveDependenciesAsList)
-      ..addAll(transitiveDevDependenciesAsList);
+    final Set<String> checksumDependencies = <String>{
+      ...directDependencies,
+      ...devDependencies,
+      ...transitiveDependenciesAsSortedList,
+      ...transitiveDevDependenciesAsSortedList
+    };
     checksumDependencies.removeAll(specialDependencies);
-
-    // Add a blank line before and after each section to keep the resulting output clean.
-    transitiveDependencyOutput
-      ..insert(0, '')
-      ..add('');
-    transitiveDevDependencyOutput
-      ..insert(0, '')
-      ..add('');
 
     // Compute a new checksum from all sorted dependencies and their version and convert to a hex string.
     final String checksumString = _computeChecksum(checksumDependencies, versions.versionFor);

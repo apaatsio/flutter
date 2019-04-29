@@ -42,29 +42,15 @@ Future<int> runTests(
   Directory coverageDirectory,
 }) async {
   // Compute the command-line arguments for package:test.
-  final List<String> testArgs = <String>[];
-  if (!terminal.supportsColor) {
-    testArgs.addAll(<String>['--no-color']);
-  }
-
-  if (machine) {
-    testArgs.addAll(<String>['-r', 'json']);
-  } else {
-    testArgs.addAll(<String>['-r', 'compact']);
-  }
-
-  testArgs.add('--concurrency=$concurrency');
-
-  for (String name in names) {
-    testArgs..add('--name')..add(name);
-  }
-
-  for (String plainName in plainNames) {
-    testArgs..add('--plain-name')..add(plainName);
-  }
-
-  testArgs.add('--');
-  testArgs.addAll(testFiles);
+  final List<String> testArgs = <String>[
+    if (!terminal.supportsColor) '--no-color',
+    '-r', machine ? 'json' : 'compact',
+    '--concurrency=$concurrency',
+    for (String name in names) ...<String>['--name', name],
+    for (String plainName in plainNames) ...<String>['--plain-name', plainName],
+    '--',
+    ...testFiles
+  ];
 
   // Configure package:test to use the Flutter engine for child processes.
   final String shellPath = artifacts.getArtifactPath(Artifact.flutterTester);

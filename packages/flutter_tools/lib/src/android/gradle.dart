@@ -557,12 +557,10 @@ File _findBundleFile(GradleProject project, BuildInfo buildInfo) {
 }
 
 Map<String, String> get _gradleEnv {
-  final Map<String, String> env = Map<String, String>.from(platform.environment);
-  if (javaPath != null) {
-    // Use java bundled with Android Studio.
-    env['JAVA_HOME'] = javaPath;
-  }
-  return env;
+  return <String, String>{
+    ...platform.environment,
+    if (javaPath != null) 'JAVA_HOME': javaPath // Use java bundled with Android Studio.
+  };
 }
 
 class GradleProject {

@@ -96,12 +96,14 @@ Future<void> pubGet({
       'Running "flutter packages $command" in ${fs.path.basename(directory)}...',
       timeout: timeoutConfiguration.slowOperation,
     );
-    final List<String> args = <String>['--verbosity=warning'];
-    if (FlutterCommand.current != null && FlutterCommand.current.globalResults['verbose'])
-      args.add('--verbose');
-    args.addAll(<String>[command, '--no-precompile']);
-    if (offline)
-      args.add('--offline');
+    final List<String> args = <String>[
+      '--verbosity=warning',
+      if (FlutterCommand.current != null && FlutterCommand.current.globalResults['verbose']) '--verbose',
+      command,
+      '--no-precompile',
+      if (offline) '--offline'
+    ];
+
     try {
       await pub(
         args,
@@ -192,7 +194,7 @@ Future<void> pubInteractively(
 
 /// The command used for running pub.
 List<String> _pubCommand(List<String> arguments) {
-  return <String>[ sdkBinaryName('pub') ]..addAll(arguments);
+  return <String>[sdkBinaryName('pub'), ...arguments];
 }
 
 /// The full environment used when running pub.

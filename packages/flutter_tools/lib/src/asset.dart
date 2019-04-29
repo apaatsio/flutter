@@ -676,7 +676,7 @@ _Asset _resolveAsset(
     baseDir: assetsBaseDir,
     entryUri: packageName == null
         ? assetUri // Asset from the current application.
-        : Uri(pathSegments: <String>['packages', packageName]..addAll(assetUri.pathSegments)), // Asset from, and declared in $packageName.
+        : Uri(pathSegments: <String>['packages', packageName, ...assetUri.pathSegments]), // Asset from, and declared in $packageName.
     relativeUri: assetUri,
   );
 }

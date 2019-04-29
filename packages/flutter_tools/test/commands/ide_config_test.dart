@@ -85,9 +85,7 @@ void main() {
       dir ??= tempDir;
       final IdeConfigCommand command = IdeConfigCommand();
       final CommandRunner<void> runner = createTestCommandRunner(command);
-      final List<String> finalArgs = <String>['--flutter-root=${tempDir.absolute.path}', 'ide-config'];
-      finalArgs.addAll(args);
-      await runner.run(finalArgs);
+      await runner.run(<String>['--flutter-root=${tempDir.absolute.path}', 'ide-config', ...args]);
 
       for (String path in expectedContents.keys) {
         final String absPath = fs.path.join(tempDir.absolute.path, path);

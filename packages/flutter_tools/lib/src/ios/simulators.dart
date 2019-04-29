@@ -141,9 +141,7 @@ class SimControl {
   }
 
   Future<RunResult> launch(String deviceId, String appIdentifier, [ List<String> launchArgs ]) {
-    final List<String> args = <String>[_xcrunPath, 'simctl', 'launch', deviceId, appIdentifier];
-    if (launchArgs != null)
-      args.addAll(launchArgs);
+    final List<String> args = <String>[_xcrunPath, 'simctl', 'launch', deviceId, appIdentifier, ...?launchArgs];
     Future<RunResult> result;
     try {
       result = runCheckedAsync(args);

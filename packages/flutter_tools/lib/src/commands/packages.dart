@@ -132,7 +132,7 @@ class PackagesTestCommand extends FlutterCommand {
 
   @override
   Future<FlutterCommandResult> runCommand() async {
-    await pub(<String>['run', 'test']..addAll(argResults.rest), context: PubContext.runTest, retry: false);
+    await pub(<String>['run', 'test', ...argResults.rest], context: PubContext.runTest, retry: false);
     return null;
   }
 }
@@ -162,7 +162,7 @@ class PackagesForwardCommand extends FlutterCommand {
 
   @override
   Future<FlutterCommandResult> runCommand() async {
-    await pub(<String>[_commandName]..addAll(argResults.rest), context: PubContext.pubForward, retry: false);
+    await pub(<String>[_commandName, ...argResults.rest], context: PubContext.pubForward, retry: false);
     return null;
   }
 

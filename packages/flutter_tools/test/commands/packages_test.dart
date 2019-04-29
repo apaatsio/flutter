@@ -60,13 +60,7 @@ void main() {
     Future<void> runCommandIn(String projectPath, String verb, { List<String> args }) async {
       final PackagesCommand command = PackagesCommand();
       final CommandRunner<void> runner = createTestCommandRunner(command);
-
-      final List<String> commandArgs = <String>['packages', verb];
-      if (args != null)
-        commandArgs.addAll(args);
-      commandArgs.add(projectPath);
-
-      await runner.run(commandArgs);
+      await runner.run(<String>['packages', verb, ...?args, projectPath]);
     }
 
     void expectExists(String projectPath, String relPath) {

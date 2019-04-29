@@ -132,12 +132,12 @@ class FlutterVersion {
   String get frameworkCommitDate => _latestGitCommitDate();
 
   static String _latestGitCommitDate([ String branch ]) {
-    final List<String> args = <String>['git', 'log'];
+    final List<String> args = <String>[
+      'git', 'log',
+      if (branch != null) branch,
+      '-n', '1', '--pretty=format:%ad', '--date=iso'
+    ];
 
-    if (branch != null)
-      args.add(branch);
-
-    args.addAll(<String>['-n', '1', '--pretty=format:%ad', '--date=iso']);
     return _runSync(args, lenient: false);
   }
 

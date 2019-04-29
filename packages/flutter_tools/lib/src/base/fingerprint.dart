@@ -118,7 +118,7 @@ class Fingerprint {
       final List<int> bytes = file.readAsBytesSync();
       _checksums[file.path] = md5.convert(bytes).toString();
     }
-    _properties = <String, String>{}..addAll(properties);
+    _properties = <String, String>{...properties};
   }
 
   /// Creates a Fingerprint from serialized JSON.
