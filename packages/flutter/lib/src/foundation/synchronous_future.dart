@@ -23,12 +23,7 @@ class SynchronousFuture<T> implements Future<T> {
   final T _value;
 
   @override
-  Stream<T> asStream() {
-    final StreamController<T> controller = StreamController<T>();
-    controller.add(_value);
-    controller.close();
-    return controller.stream;
-  }
+  Stream<T> asStream() => Stream<T>.fromFuture(this);
 
   @override
   Future<T> catchError(Function onError, { bool test(dynamic error) }) => Completer<T>().future;
